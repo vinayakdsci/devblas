@@ -1,10 +1,10 @@
-## devBlas: A CPU BLAS implementation
+## devblas: A CPU BLAS implementation
 
-**devBlas** is a simple CPU-only educational BLAS framework written in C to learn about how high performance linear algebra operations are written.
+**devblas** is a simple CPU-only educational BLAS framework written in C to learn about how high performance linear algebra operations are written.
 
 ### Building
 
-**devBlas** build produces a `.so` shared library. It is intended that the user will use the exported API by linking against the shared object file produced after compilation.
+**devblas** build produces a `.so` shared library. It is intended that the user will use the exported API by linking against the shared object file produced after compilation.
 To build (and install), run
 
 ```sh
