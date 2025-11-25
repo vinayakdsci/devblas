@@ -1,27 +1,36 @@
 #include "devblas/c_api/blas.h"
 #include "devblas/benchmarking/bench.h"
-#include "devblas/naive_gemm.h"
+#include "devblas/kernels/naive_gemm.h"
+#include "devblas/types/layout.h"
 
 using namespace devblas;
 
-extern "C" void naive_igemm_ijk(const int *A, const int *B, int *C, int M,
-                                int N, int K) {
-  internal::naive_gemm_ijk<int>(A, B, C, M, N, K);
+namespace types = internal::types;
+
+extern "C" void naive_igemm_ijk(devblas_layout_t layout, const int *A,
+                                const int *B, int *C, int M, int N, int K,
+                                int lda, int ldb, int ldc) {
+  internal::naive_gemm_ijk<int>(types::layout_to_cpp(layout), A, B, C, M, N, K,
+                                lda, ldb, ldc);
 }
 
-extern "C" void naive_sgemm_ijk(const float *A, const float *B, float *C, int M,
-                                int N, int K) {
-  internal::naive_gemm_ijk<float>(A, B, C, M, N, K);
+extern "C" void naive_sgemm_ijk(devblas_layout_t layout, const float *A,
+                                const float *B, float *C, int M, int N, int K,
+                                int lda, int ldb, int ldc) {
+  internal::naive_gemm_ijk<float>(types::layout_to_cpp(layout), A, B, C, M, N,
+                                  K, lda, ldb, ldc);
 }
 
-extern "C" void bench_igemm(devblas_naive_igemm_fn fn, int iter, int M, int N,
-                            int K) {
-  internal::bench::benchmark_gemm<int>("default_naive_igemm", fn, iter, M, N,
-                                       K);
+extern "C" void bench_igemm(devblas_igemm_fn fn, int iter,
+                            devblas_layout_t layout, int M, int N, int K,
+                            int lda, int ldb, int ldc) {
+  internal::bench::benchmark_gemm<int>("default_naive_igemm", fn, layout, iter,
+                                       M, N, K, lda, ldb, ldc);
 }
 
-extern "C" void bench_sgemm(devblas_naive_sgemm_fn fn, int iter, int M, int N,
-                            int K) {
-  internal::bench::benchmark_gemm<float>("default_naive_sgemm", fn, iter, M, N,
-                                         K);
+extern "C" void bench_sgemm(devblas_sgemm_fn fn, int iter,
+                            devblas_layout_t layout, int M, int N, int K,
+                            int lda, int ldb, int ldc) {
+  internal::bench::benchmark_gemm<float>("default_naive_sgemm", fn, layout,
+                                         iter, M, N, K, lda, ldb, ldc);
 }

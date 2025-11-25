@@ -1,5 +1,5 @@
 add_library(devblas SHARED
-	sgemm.cc
+	kernels/naive_gemm.cc
 	c_api/blas.cc
 	benchmarking/bench.cc
 )

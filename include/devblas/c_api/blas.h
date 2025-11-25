@@ -4,15 +4,26 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-void naive_igemm_ijk(const int *, const int *, int *, int, int, int);
-void naive_sgemm_ijk(const float *, const float *, float *, int, int, int);
-typedef void (*devblas_naive_sgemm_fn)(const float *, const float *, float *,
-                                       int, int, int);
-typedef void (*devblas_naive_igemm_fn)(const int *, const int *, int *, int,
-                                       int, int);
 
-void bench_igemm(devblas_naive_igemm_fn fn, int iter, int M, int N, int K);
-void bench_sgemm(devblas_naive_sgemm_fn fn, int iter, int M, int N, int K);
+typedef enum devblas_layout_t {
+  DEVBLAS_LAYOUT_ROW_MAJOR,
+  DEVBLAS_LAYOUT_COLUMN_MAJOR
+} devblas_layout_t;
+
+void naive_igemm_ijk(devblas_layout_t, const int *, const int *, int *, int,
+                     int, int, int, int, int);
+void naive_sgemm_ijk(devblas_layout_t, const float *, const float *, float *,
+                     int, int, int, int, int, int);
+
+typedef void (*devblas_sgemm_fn)(devblas_layout_t, const float *, const float *,
+                                 float *, int, int, int, int, int, int);
+typedef void (*devblas_igemm_fn)(devblas_layout_t, const int *, const int *,
+                                 int *, int, int, int, int, int, int);
+
+void bench_igemm(devblas_igemm_fn fn, int iter, devblas_layout_t layout, int M,
+                 int N, int K, int, int, int);
+void bench_sgemm(devblas_sgemm_fn fn, int iter, devblas_layout_t layout, int M,
+                 int N, int K, int, int, int);
 #ifdef __cplusplus
 }
 #endif
