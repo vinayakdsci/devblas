@@ -13,11 +13,11 @@ enum class Layout {
 inline Layout layout_to_cpp(devblas_layout_t layout) {
   switch (layout) {
   case DEVBLAS_LAYOUT_ROW_MAJOR:
-    return internal::types::Layout::ROW_MAJOR;
+    return Layout::ROW_MAJOR;
   case DEVBLAS_LAYOUT_COLUMN_MAJOR:
-    return internal::types::Layout::COLUMN_MAJOR;
+    return Layout::COLUMN_MAJOR;
   default:
-    return internal::types::Layout::ROW_MAJOR;
+    return Layout::ROW_MAJOR;
   }
 }
 }
