@@ -4,6 +4,15 @@
 #include "devblas/types/layout.h"
 #include <iostream>
 #include <random>
+#include <type_traits>
+
+namespace {
+template <typename T>
+using uniform_distribution_selector =
+    std::conditional_t<std::is_floating_point_v<T>,
+                       std::uniform_real_distribution<T>,
+                       std::uniform_int_distribution<T>>;
+}
 
 namespace devblas::internal {
 namespace bench {
@@ -11,8 +20,10 @@ namespace bench {
 template <typename T>
 void benchmark_gemm(const char *name, GemmFn<T> fn, devblas_layout_t layout,
                     int iters, int M, int N, int K, int lda, int ldb, int ldc) {
-  std::mt19937 rng(0);
-  std::uniform_real_distribution<float> dist(-1.f, 1.f);
+  std::random_device rd;
+  std::mt19937 rng(rd());
+
+  uniform_distribution_selector<T> dist(static_cast<T>(-5), static_cast<T>(5));
 
   std::vector<T> A;
   std::vector<T> B;
