@@ -21,17 +21,18 @@ extern "C" void naive_sgemm_ijk(devblas_layout_t layout, const float *A,
                                   K, lda, ldb, ldc);
 }
 
-extern "C" void bench_igemm(devblas_igemm_fn fn, const char *name, int iter,
-                            devblas_layout_t layout, int M, int N, int K,
-                            int lda, int ldb, int ldc) {
-  internal::bench::benchmark_gemm<int>(name ? name : "default_naive_igemm", fn,
-                                       layout, iter, M, N, K, lda, ldb, ldc);
+extern "C" void bench_igemm(devblas_igemm_fn fn, const char *name, int warmup,
+                            int iter, devblas_layout_t layout, int M, int N,
+                            int K, int lda, int ldb, int ldc) {
+  internal::bench::benchmark_gemm<int>(name ? name : "default_naive_igemm",
+                                       !!warmup, fn, layout, iter, M, N, K, lda,
+                                       ldb, ldc);
 }
 
-extern "C" void bench_sgemm(devblas_sgemm_fn fn, const char *name, int iter,
-                            devblas_layout_t layout, int M, int N, int K,
-                            int lda, int ldb, int ldc) {
+extern "C" void bench_sgemm(devblas_sgemm_fn fn, const char *name, int warmup,
+                            int iter, devblas_layout_t layout, int M, int N,
+                            int K, int lda, int ldb, int ldc) {
   internal::bench::benchmark_gemm<float>(name ? name : "default_naive_sgemm",
-                                         fn, layout, iter, M, N, K, lda, ldb,
-                                         ldc);
+                                         !!warmup, fn, layout, iter, M, N, K,
+                                         lda, ldb, ldc);
 }

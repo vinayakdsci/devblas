@@ -20,9 +20,9 @@ typedef void (*devblas_sgemm_fn)(devblas_layout_t, const float *, const float *,
 typedef void (*devblas_igemm_fn)(devblas_layout_t, const int *, const int *,
                                  int *, int, int, int, int, int, int);
 
-void bench_igemm(devblas_igemm_fn fn, const char *name, int iter,
+void bench_igemm(devblas_igemm_fn fn, const char *name, int warmup, int iter,
                  devblas_layout_t layout, int M, int N, int K, int, int, int);
-void bench_sgemm(devblas_sgemm_fn fn, const char *name, int iter,
+void bench_sgemm(devblas_sgemm_fn fn, const char *name, int warmup, int iter,
                  devblas_layout_t layout, int M, int N, int K, int, int, int);
 #ifdef __cplusplus
 }
