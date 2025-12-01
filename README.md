@@ -26,9 +26,6 @@ in the root of the repository.
 This generates `libdevblas.so` inside `devblas_out/devblas`. You can link your own
 applications against this shared library.
 
-Each of them takes a function pointer to a user-provided IGEMM/SGEMM kernel along
-with the matrix dimensions and leading dimensions needed for benchmarking.
-
 A driver implementation named `bench_driver.c` is also provided to experiment with benchmarking and will automatically be linked with `libdevblas.so`. To use it, add `-DDEVBLAS_BUILD_BENCH=ON` in the cmake command.
 
 ### Benchmarking
