@@ -11,7 +11,7 @@ using GemmFn = void (*)(devblas_layout_t layout, const T *, const T *, T *, int,
                         int, int, int, int, int);
 
 template <typename T>
-void benchmark_gemm(const char *name, bool warmup, GemmFn<T> fn,
+void benchmark_gemm(const char *name, int warmup_iters, GemmFn<T> fn,
                     devblas_layout_t layout, int iters, int M, int N, int K,
                     int lda, int ldb, int ldc);
 } // namespace devblas::internal::bench

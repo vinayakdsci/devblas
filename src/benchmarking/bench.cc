@@ -6,7 +6,6 @@
 #include <random>
 #include <type_traits>
 
-#define NUM_WARMUP_ITERATIONS 2
 namespace {
 template <typename T>
 using uniform_distribution_selector =
@@ -19,7 +18,7 @@ namespace devblas::internal {
 namespace bench {
 
 template <typename T>
-void benchmark_gemm(const char *name, bool warmup, GemmFn<T> fn,
+void benchmark_gemm(const char *name, int warmup_iters, GemmFn<T> fn,
                     devblas_layout_t layout, int iters, int M, int N, int K,
                     int lda, int ldb, int ldc) {
   std::random_device rd;
@@ -78,10 +77,8 @@ void benchmark_gemm(const char *name, bool warmup, GemmFn<T> fn,
     }
   }
 
-  if (warmup) {
-    for (int i = 0; i < NUM_WARMUP_ITERATIONS; ++i) {
-      fn(layout, A.data(), B.data(), C.data(), M, N, K, lda, ldb, ldc);
-    }
+  for (int i = 0; i < warmup_iters; ++i) {
+    fn(layout, A.data(), B.data(), C.data(), M, N, K, lda, ldb, ldc);
   }
 
   double flops_per_gemm = 2.0 * M * N * K;
@@ -99,10 +96,10 @@ void benchmark_gemm(const char *name, bool warmup, GemmFn<T> fn,
   std::cout << "\tAverage GFLOP/s: " << gflops << "\n";
 }
 
-template void benchmark_gemm<int>(const char *name, bool warmup, GemmFn<int>,
+template void benchmark_gemm<int>(const char *name, int warmup_iters, GemmFn<int>,
                                   devblas_layout_t layout, int iters, int M,
                                   int N, int K, int lda, int ldb, int ldc);
-template void benchmark_gemm<float>(const char *name, bool warmup,
+template void benchmark_gemm<float>(const char *name, int warmup_iters,
                                     GemmFn<float>, devblas_layout_t layout,
                                     int iters, int M, int N, int K, int lda,
                                     int ldb, int ldc);
