@@ -15,15 +15,22 @@ void naive_igemm_ijk(devblas_layout_t, const int *, const int *, int *, int,
 void naive_sgemm_ijk(devblas_layout_t, const float *, const float *, float *,
                      int, int, int, int, int, int);
 
+void naive_igemm_kij(devblas_layout_t, const int *, const int *, int *, int,
+                     int, int, int, int, int);
+void naive_sgemm_kij(devblas_layout_t, const float *, const float *, float *,
+                     int, int, int, int, int, int);
+
 typedef void (*devblas_sgemm_fn)(devblas_layout_t, const float *, const float *,
                                  float *, int, int, int, int, int, int);
 typedef void (*devblas_igemm_fn)(devblas_layout_t, const int *, const int *,
                                  int *, int, int, int, int, int, int);
 
-void bench_igemm(devblas_igemm_fn fn, const char *name, int warmup_iters, int iter,
-                 devblas_layout_t layout, int M, int N, int K, int lda, int ldb, int ldc);
-void bench_sgemm(devblas_sgemm_fn fn, const char *name, int warmup_iters, int iter,
-                 devblas_layout_t layout, int M, int N, int K, int lda, int ldb, int ldc);
+void bench_igemm(devblas_igemm_fn fn, const char *name, int warmup_iters,
+                 int iter, devblas_layout_t layout, int M, int N, int K,
+                 int lda, int ldb, int ldc);
+void bench_sgemm(devblas_sgemm_fn fn, const char *name, int warmup_iters,
+                 int iter, devblas_layout_t layout, int M, int N, int K,
+                 int lda, int ldb, int ldc);
 #ifdef __cplusplus
 }
 #endif
