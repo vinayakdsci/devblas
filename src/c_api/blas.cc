@@ -17,8 +17,8 @@ extern "C" void naive_igemm_ijk(devblas_layout_t layout, const int *A,
 extern "C" void naive_igemm_kij(devblas_layout_t layout, const int *A,
                                 const int *B, int *C, int M, int N, int K,
                                 int lda, int ldb, int ldc) {
-  internal::naive_gemm_ijk<int>(types::layout_to_cpp(layout), A, B, C, M, N, K,
-                                lda, ldb, ldc);
+    internal::naive_gemm_kij<int>(types::layout_to_cpp(layout), A, B, C, M, N, K,
+                                  lda, ldb, ldc);
 }
 
 extern "C" void naive_sgemm_ijk(devblas_layout_t layout, const float *A,
@@ -31,8 +31,8 @@ extern "C" void naive_sgemm_ijk(devblas_layout_t layout, const float *A,
 extern "C" void naive_sgemm_kij(devblas_layout_t layout, const float *A,
                                 const float *B, float *C, int M, int N, int K,
                                 int lda, int ldb, int ldc) {
-  internal::naive_gemm_ijk<float>(types::layout_to_cpp(layout), A, B, C, M, N,
-                                  K, lda, ldb, ldc);
+    internal::naive_gemm_kij<float>(types::layout_to_cpp(layout), A, B, C, M, N,
+                                    K, lda, ldb, ldc);
 }
 
 extern "C" void bench_igemm(devblas_igemm_fn fn, const char *name,
