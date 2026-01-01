@@ -33,15 +33,15 @@ template <typename T>
   requires(std::integral<T> || std::floating_point<T>)
 void naive_gemm_kij(types::Layout layout, const T *A, const T *B, T *C, int M,
                     int N, int K, int lda, int ldb, int ldc) {
-  bool init = false;
+  // Zero initialize C before writing into it.
+  for (int i = 0; i < (layout == types::Layout::ROW_MAJOR ? N * ldc : M * ldc);
+       ++i) {
+    C[i] = 0;
+  }
   if (layout == types::Layout::ROW_MAJOR) {
     for (int k = 0; k < K; ++k) {
       for (int i = 0; i < M; ++i) {
         for (int j = 0; j < N; ++j) {
-          if (!init) {
-            C[i * ldc + j] = 0;
-            init = true;
-          }
           C[i * ldc + j] += A[i * lda + k] * B[k * ldb + j];
         }
       }
@@ -50,10 +50,6 @@ void naive_gemm_kij(types::Layout layout, const T *A, const T *B, T *C, int M,
     for (int k = 0; k < K; ++k) {
       for (int i = 0; i < M; ++i) {
         for (int j = 0; j < N; ++j) {
-          if (!init) {
-            C[j * ldc + i] = 0;
-            init = true;
-          }
           C[j * ldc + i] += A[k * lda + i] * B[j * ldb + k];
         }
       }

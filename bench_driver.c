@@ -11,11 +11,11 @@ int main(void) {
 
   float A[] = {0, 1, 2, 3};
   float B[] = {0, 1, 2, 3};
-  float C[] = {0, 0, 0, 0};
+  float C[] = {0, 0, 0, 0, 0, 0, 0};
 
-  naive_sgemm_kij(DEVBLAS_LAYOUT_COLUMN_MAJOR, A, B, C, 2, 2, 2, 2, 2, 2);
+  naive_sgemm_kij(DEVBLAS_LAYOUT_COLUMN_MAJOR, A, B, C, 2, 2, 2, 2, 2, 3);
 
-  for (size_t i = 0; i < 4; ++i) {
+  for (size_t i = 0; i < 6; ++i) {
     fprintf(stderr, "%f\n", C[i]);
   }
 
