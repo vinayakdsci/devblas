@@ -20,6 +20,11 @@ void naive_igemm_kij(devblas_layout_t, const int *, const int *, int *, int,
 void naive_sgemm_kij(devblas_layout_t, const float *, const float *, float *,
                      int, int, int, int, int, int);
 
+void tiled_sgemm(devblas_layout_t, const float *, const float *, float *,
+                     int, int, int, int, int, int, int);
+void tiled_igemm(devblas_layout_t, const int *, const int *, int *, int,
+                     int, int, int, int, int, int);
+
 typedef void (*devblas_sgemm_fn)(devblas_layout_t, const float *, const float *,
                                  float *, int, int, int, int, int, int);
 typedef void (*devblas_igemm_fn)(devblas_layout_t, const int *, const int *,
