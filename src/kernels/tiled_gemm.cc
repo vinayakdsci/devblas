@@ -21,22 +21,19 @@ void tiled_gemm(const T *A, const T *B, T *C, types::GemmConfig &config) {
 
   if (config.layoutIsRowMajor()) {
     for (int i = 0; i < M; i += *ts) {
+      int i_end = std::min(i + *ts, M);
       for (int j = 0; j < N; j += *ts) {
+        int j_end = std::min(j + *ts, N);
         for (int k = 0; k < K; k += *ts) {
-          // Decide the tile size based on how many rows/cols are left on the
-          // edge.
-          int i_end = std::min(i + *ts, M);
-          int j_end = std::min(j + *ts, N);
           int k_end = std::min(k + *ts, K);
 
-          // Perform matmul on the tiles.
           for (int ii = i; ii < i_end; ++ii) {
             for (int jj = j; jj < j_end; ++jj) {
-              T acc = 0;
-              for (int kk = 0; kk < k_end; ++kk) {
+              T acc = T{0};
+              for (int kk = k; kk < k_end; ++kk) {
                 acc += A[ii * lda + kk] * B[kk * ldb + jj];
               }
-              C[ii * ldc + jj] = acc;
+              C[ii * ldc + jj] += acc;
             }
           }
         }
@@ -44,22 +41,19 @@ void tiled_gemm(const T *A, const T *B, T *C, types::GemmConfig &config) {
     }
   } else {
     for (int j = 0; j < N; j += *ts) {
+      int j_end = std::min(j + *ts, N);
       for (int i = 0; i < M; i += *ts) {
+        int i_end = std::min(i + *ts, M);
         for (int k = 0; k < K; k += *ts) {
-          // Decide the tile size based on how many rows/cols are left on the
-          // edge.
-          int i_end = std::min(i + *ts, M);
-          int j_end = std::min(j + *ts, N);
           int k_end = std::min(k + *ts, K);
 
-          // Perform matmul on the tiles.
           for (int jj = j; jj < j_end; ++jj) {
             for (int ii = i; ii < i_end; ++ii) {
-              T acc = 0;
-              for (int kk = 0; kk < k_end; ++kk) {
+              T acc = T{0};
+              for (int kk = k; kk < k_end; ++kk) {
                 acc += A[kk * lda + ii] * B[jj * ldb + kk];
               }
-              C[jj * ldc + ii] = acc;
+              C[jj * ldc + ii] += acc;
             }
           }
         }
