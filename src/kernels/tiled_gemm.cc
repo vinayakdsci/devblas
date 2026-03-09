@@ -4,13 +4,14 @@ namespace devblas::internal {
 
 template <typename T>
   requires(std::integral<T> || std::floating_point<T>)
-void tiled_gemm(const T *A, const T *B, T *C, types::GemmConfig &config) {
+void tiled_gemm(const T *A, const T *B, T *C, types::GemmConfig config) {
   auto [M, N, K] = config.logicalDims();
   auto [lda, ldb, ldc] = config.leadingDims();
   std::optional<int> ts = config.tileSize();
 
   if (!ts) {
-    throw std::runtime_error("TileSize should be passed in for tiled GEMM");
+    throw std::runtime_error(
+        "Non-negative TileSize should be passed in for tiled GEMM");
   }
 
   // Zero initialize C
@@ -26,7 +27,6 @@ void tiled_gemm(const T *A, const T *B, T *C, types::GemmConfig &config) {
         int j_end = std::min(j + *ts, N);
         for (int k = 0; k < K; k += *ts) {
           int k_end = std::min(k + *ts, K);
-
           for (int ii = i; ii < i_end; ++ii) {
             for (int jj = j; jj < j_end; ++jj) {
               T acc = T{0};
@@ -46,7 +46,6 @@ void tiled_gemm(const T *A, const T *B, T *C, types::GemmConfig &config) {
         int i_end = std::min(i + *ts, M);
         for (int k = 0; k < K; k += *ts) {
           int k_end = std::min(k + *ts, K);
-
           for (int jj = j; jj < j_end; ++jj) {
             for (int ii = i; ii < i_end; ++ii) {
               T acc = T{0};
@@ -62,7 +61,9 @@ void tiled_gemm(const T *A, const T *B, T *C, types::GemmConfig &config) {
   }
 }
 
-template void tiled_gemm<float>(const float *A, const float *B, float *C, types::GemmConfig& config);
-template void tiled_gemm<int>(const int *A, const int *B, int *C, types::GemmConfig& config);
+template void tiled_gemm<float>(const float *A, const float *B, float *C,
+                                types::GemmConfig config);
+template void tiled_gemm<int>(const int *A, const int *B, int *C,
+                              types::GemmConfig config);
 
 } // namespace devblas::internal

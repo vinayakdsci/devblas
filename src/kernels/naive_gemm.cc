@@ -5,9 +5,11 @@ namespace devblas {
 namespace internal {
 template <typename T>
   requires(std::integral<T> || std::floating_point<T>)
-void naive_gemm_ijk(types::Layout layout, const T *A, const T *B, T *C, int M,
-                    int N, int K, int lda, int ldb, int ldc) {
-  if (layout == types::Layout::ROW_MAJOR) {
+void naive_gemm_ijk(const T *A, const T *B, T *C, types::GemmConfig config) {
+  auto [M, N, K] = config.logicalDims();
+  auto [lda, ldb, ldc] = config.leadingDims();
+
+  if (config.layoutIsRowMajor()) {
     for (int i = 0; i < M; ++i) {
       for (int j = 0; j < N; ++j) {
         C[i * ldc + j] = 0;
@@ -31,14 +33,15 @@ void naive_gemm_ijk(types::Layout layout, const T *A, const T *B, T *C, int M,
 
 template <typename T>
   requires(std::integral<T> || std::floating_point<T>)
-void naive_gemm_kij(types::Layout layout, const T *A, const T *B, T *C, int M,
-                    int N, int K, int lda, int ldb, int ldc) {
+void naive_gemm_kij(const T *A, const T *B, T *C, types::GemmConfig config) {
+  auto [M, N, K] = config.logicalDims();
+  auto [lda, ldb, ldc] = config.leadingDims();
+
   // Zero initialize C before writing into it.
-  for (int i = 0; i < (layout == types::Layout::ROW_MAJOR ? N * ldc : M * ldc);
-       ++i) {
+  for (int i = 0; i < (config.layoutIsRowMajor() ? N * ldc : M * ldc); ++i) {
     C[i] = 0;
   }
-  if (layout == types::Layout::ROW_MAJOR) {
+  if (config.layoutIsRowMajor()) {
     for (int k = 0; k < K; ++k) {
       for (int i = 0; i < M; ++i) {
         for (int j = 0; j < N; ++j) {
@@ -57,17 +60,17 @@ void naive_gemm_kij(types::Layout layout, const T *A, const T *B, T *C, int M,
   }
 }
 
-template void naive_gemm_kij<int>(types::Layout, const int *, const int *,
-                                  int *, int, int, int, int, int, int);
+template void naive_gemm_kij<int>(const int *, const int *, int *,
+                                  types::GemmConfig config);
 
-template void naive_gemm_kij<float>(types::Layout, const float *, const float *,
-                                    float *, int, int, int, int, int, int);
+template void naive_gemm_kij<float>(const float *, const float *, float *,
+                                    types::GemmConfig config);
 
-template void naive_gemm_ijk<int>(types::Layout, const int *, const int *,
-                                  int *, int, int, int, int, int, int);
+template void naive_gemm_ijk<int>(const int *, const int *, int *,
+                                  types::GemmConfig config);
 
-template void naive_gemm_ijk<float>(types::Layout, const float *, const float *,
-                                    float *, int, int, int, int, int, int);
+template void naive_gemm_ijk<float>(const float *, const float *, float *,
+                                    types::GemmConfig config);
 
 } // namespace internal
 } // namespace devblas

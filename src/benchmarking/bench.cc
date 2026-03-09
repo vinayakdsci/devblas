@@ -18,9 +18,18 @@ namespace devblas::internal {
 namespace bench {
 
 template <typename T>
-void benchmark_gemm(const char *name, int warmup_iters, GemmFn<T> fn,
-                    devblas_layout_t layout, int iters, int M, int N, int K,
-                    int lda, int ldb, int ldc) {
+void benchmark_gemm(const char *name, int warmup_iters, int iters, GemmFn<T> fn,
+                    devblas_gemm_config_t *config) {
+
+  if (!config) {
+    throw std::runtime_error("Received NULL config!");
+  }
+
+  auto cppConfig = types::gemm_config_to_cpp(config);
+
+  auto [M, N, K] = cppConfig.logicalDims();
+  auto [lda, ldb, ldc] = cppConfig.leadingDims();
+
   std::random_device rd;
   std::mt19937 rng(rd());
 
@@ -30,7 +39,7 @@ void benchmark_gemm(const char *name, int warmup_iters, GemmFn<T> fn,
   std::vector<T> B;
   std::vector<T> C;
 
-  if (layout == DEVBLAS_LAYOUT_ROW_MAJOR) {
+  if (cppConfig.layoutIsRowMajor()) {
     A = std::vector<T>(M * lda, 0);
     B = std::vector<T>(K * ldb, 0);
     C = std::vector<T>(M * ldc, 0);
@@ -41,7 +50,7 @@ void benchmark_gemm(const char *name, int warmup_iters, GemmFn<T> fn,
   }
 
   // TODO (vinayakdsci): Refactor this into a reusable function.
-  if (layout == DEVBLAS_LAYOUT_ROW_MAJOR) {
+  if (cppConfig.layoutIsRowMajor()) {
     for (int64_t i = 0; i < M; ++i) {
       for (size_t j = 0; j < lda; ++j) {
         if (j < K) {
@@ -59,7 +68,7 @@ void benchmark_gemm(const char *name, int warmup_iters, GemmFn<T> fn,
     }
   }
 
-  if (layout == DEVBLAS_LAYOUT_ROW_MAJOR) {
+  if (cppConfig.layoutIsRowMajor()) {
     for (int64_t i = 0; i < K; ++i) {
       for (size_t j = 0; j < ldb; ++j) {
         if (j < N) {
@@ -78,7 +87,7 @@ void benchmark_gemm(const char *name, int warmup_iters, GemmFn<T> fn,
   }
 
   for (int i = 0; i < warmup_iters; ++i) {
-    fn(layout, A.data(), B.data(), C.data(), M, N, K, lda, ldb, ldc);
+    fn(A.data(), B.data(), C.data(), config);
   }
 
   double flops_per_gemm = 2.0 * M * N * K;
@@ -86,7 +95,7 @@ void benchmark_gemm(const char *name, int warmup_iters, GemmFn<T> fn,
 
   Timer t = Timer();
   for (int i = 0; i < iters; ++i) {
-    fn(layout, A.data(), B.data(), C.data(), M, N, K, lda, ldb, ldc);
+    fn(A.data(), B.data(), C.data(), config);
   }
 
   double total_seconds = t.elapsed_s();
@@ -96,13 +105,11 @@ void benchmark_gemm(const char *name, int warmup_iters, GemmFn<T> fn,
   std::cout << "\tAverage GFLOP/s: " << gflops << "\n";
 }
 
-template void benchmark_gemm<int>(const char *name, int warmup_iters, GemmFn<int>,
-                                  devblas_layout_t layout, int iters, int M,
-                                  int N, int K, int lda, int ldb, int ldc);
+template void benchmark_gemm<int>(const char *name, int warmup_iters, int iters,
+                                  GemmFn<int>, devblas_gemm_config_t *config);
 template void benchmark_gemm<float>(const char *name, int warmup_iters,
-                                    GemmFn<float>, devblas_layout_t layout,
-                                    int iters, int M, int N, int K, int lda,
-                                    int ldb, int ldc);
+                                    int iters, GemmFn<float>,
+                                    devblas_gemm_config_t *config);
 
 } // namespace bench
 } // namespace devblas::internal

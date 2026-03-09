@@ -10,32 +10,41 @@ typedef enum devblas_layout_t {
   DEVBLAS_LAYOUT_COLUMN_MAJOR
 } devblas_layout_t;
 
-void naive_igemm_ijk(devblas_layout_t, const int *, const int *, int *, int,
-                     int, int, int, int, int);
-void naive_sgemm_ijk(devblas_layout_t, const float *, const float *, float *,
-                     int, int, int, int, int, int);
+typedef struct devblas_gemm_config_t {
+  devblas_layout_t layout;
+  int M;
+  int N;
+  int K;
+  int lda;
+  int ldb;
+  int ldc;
+  int tileSize;
+} devblas_gemm_config_t;
 
-void naive_igemm_kij(devblas_layout_t, const int *, const int *, int *, int,
-                     int, int, int, int, int);
-void naive_sgemm_kij(devblas_layout_t, const float *, const float *, float *,
-                     int, int, int, int, int, int);
+void naive_igemm_ijk(const int *, const int *, int *,
+                     devblas_gemm_config_t *config);
+void naive_sgemm_ijk(const float *, const float *, float *,
+                     devblas_gemm_config_t *config);
 
-void tiled_sgemm(devblas_layout_t, const float *, const float *, float *,
-                     int, int, int, int, int, int, int);
-void tiled_igemm(devblas_layout_t, const int *, const int *, int *, int,
-                     int, int, int, int, int, int);
+void naive_igemm_kij(const int *, const int *, int *,
+                     devblas_gemm_config_t *config);
+void naive_sgemm_kij(const float *, const float *, float *,
+                     devblas_gemm_config_t *config);
 
-typedef void (*devblas_sgemm_fn)(devblas_layout_t, const float *, const float *,
-                                 float *, int, int, int, int, int, int);
-typedef void (*devblas_igemm_fn)(devblas_layout_t, const int *, const int *,
-                                 int *, int, int, int, int, int, int);
+void tiled_sgemm(const float *, const float *, float *,
+                 devblas_gemm_config_t *config);
+void tiled_igemm(const int *, const int *, int *,
+                 devblas_gemm_config_t *config);
+
+typedef void (*devblas_sgemm_fn)(const float *, const float *, float *,
+                                 devblas_gemm_config_t *config);
+typedef void (*devblas_igemm_fn)(const int *, const int *, int *,
+                                 devblas_gemm_config_t *config);
 
 void bench_igemm(devblas_igemm_fn fn, const char *name, int warmup_iters,
-                 int iter, devblas_layout_t layout, int M, int N, int K,
-                 int lda, int ldb, int ldc);
+                 int iter, devblas_gemm_config_t *config);
 void bench_sgemm(devblas_sgemm_fn fn, const char *name, int warmup_iters,
-                 int iter, devblas_layout_t layout, int M, int N, int K,
-                 int lda, int ldb, int ldc);
+                 int iter, devblas_gemm_config_t *config);
 #ifdef __cplusplus
 }
 #endif

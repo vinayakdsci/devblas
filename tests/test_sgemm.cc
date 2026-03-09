@@ -12,7 +12,9 @@ TEST(GemmTestAccuracy, IGEMMIJKColMajor) {
   int C[4] = {0, 0, 0, 0};
 
   int M = 2, N = 2, K = 3;
-  naive_gemm_ijk<int>(types::Layout::COLUMN_MAJOR, A, B, C, M, N, K, M, K, M);
+  types::GemmConfig config =
+      types::GemmConfig(types::Layout::COLUMN_MAJOR, M, N, K, M, K, M);
+  naive_gemm_ijk<int>(A, B, C, std::move(config));
 
   std::vector<int> expected = {58, 139, 64, 154};
   for (size_t i = 0; i < 4; ++i) {
@@ -26,7 +28,9 @@ TEST(GemmTestAccuracy, IGEMMIJKRowMajor) {
   int C[4] = {0, 0, 0, 0};
 
   int M = 2, N = 2, K = 3;
-  naive_gemm_ijk<int>(types::Layout::ROW_MAJOR, A, B, C, M, N, K, K, N, N);
+  types::GemmConfig config =
+      types::GemmConfig(types::Layout::ROW_MAJOR, M, N, K, K, N, N);
+  naive_gemm_ijk<int>(A, B, C, std::move(config));
 
   std::vector<int> expected = {58, 64, 139, 154};
   for (size_t i = 0; i < 4; ++i) {
@@ -40,7 +44,9 @@ TEST(GemmTestAccuracy, IGEMMKIJRowMajor) {
   int C[4] = {0, 0, 0, 0};
 
   int M = 2, N = 2, K = 3;
-  naive_gemm_kij<int>(types::Layout::ROW_MAJOR, A, B, C, M, N, K, K, N, N);
+  types::GemmConfig config =
+      types::GemmConfig(types::Layout::ROW_MAJOR, M, N, K, K, N, N);
+  naive_gemm_ijk<int>(A, B, C, std::move(config));
 
   std::vector<int> expected = {58, 64, 139, 154};
   for (size_t i = 0; i < 4; ++i) {
@@ -54,7 +60,9 @@ TEST(GemmTestAccuracy, IGEMMKIJColMajor) {
   int C[4] = {0, 0, 0, 0};
 
   int M = 2, N = 2, K = 3;
-  naive_gemm_kij<int>(types::Layout::COLUMN_MAJOR, A, B, C, M, N, K, M, K, M);
+  types::GemmConfig config =
+      types::GemmConfig(types::Layout::COLUMN_MAJOR, M, N, K, M, K, M);
+  naive_gemm_kij<int>(A, B, C, std::move(config));
 
   std::vector<int> expected = {58, 139, 64, 154};
   for (size_t i = 0; i < 4; ++i) {
@@ -68,7 +76,9 @@ TEST(GemmTestAccuracy, SGEMMIJKColMajor) {
   float C[4] = {0, 0, 0, 0};
 
   float M = 2, N = 2, K = 3;
-  naive_gemm_ijk<float>(types::Layout::COLUMN_MAJOR, A, B, C, M, N, K, M, K, M);
+  types::GemmConfig config =
+      types::GemmConfig(types::Layout::COLUMN_MAJOR, M, N, K, M, K, M);
+  naive_gemm_ijk<float>(A, B, C, std::move(config));
 
   std::vector<float> expected = {58, 139, 64, 154};
   for (size_t i = 0; i < 4; ++i) {
@@ -81,7 +91,9 @@ TEST(GemmTestAccuracy, SGEMMIJKRowMajor) { float A[6] = {1, 2, 3, 4, 5, 6};
   float C[4] = {0, 0, 0, 0};
 
   float M = 2, N = 2, K = 3;
-  naive_gemm_ijk<float>(types::Layout::ROW_MAJOR, A, B, C, M, N, K, K, N, N);
+  types::GemmConfig config =
+      types::GemmConfig(types::Layout::ROW_MAJOR, M, N, K, K, N, N);
+  naive_gemm_ijk<float>(A, B, C, std::move(config));
 
   std::vector<float> expected = {58, 64, 139, 154};
   for (size_t i = 0; i < 4; ++i) {
@@ -95,7 +107,9 @@ TEST(GemmTestAccuracy, SGEMMKIJRowMajor) {
   float C[4] = {0, 0, 0, 0};
 
   float M = 2, N = 2, K = 3;
-  naive_gemm_kij<float>(types::Layout::ROW_MAJOR, A, B, C, M, N, K, K, N, N);
+  types::GemmConfig config =
+      types::GemmConfig(types::Layout::ROW_MAJOR, M, N, K, K, N, N);
+  naive_gemm_kij<float>(A, B, C, std::move(config));
 
   std::vector<float> expected = {58, 64, 139, 154};
   for (size_t i = 0; i < 4; ++i) {
@@ -109,7 +123,9 @@ TEST(GemmTestAccuracy, SGEMMKIJColMajor) {
   float C[4] = {0, 0, 0, 0};
 
   float M = 2, N = 2, K = 3;
-  naive_gemm_kij<float>(types::Layout::COLUMN_MAJOR, A, B, C, M, N, K, M, K, M);
+  types::GemmConfig config =
+      types::GemmConfig(types::Layout::COLUMN_MAJOR, M, N, K, M, K, M);
+  naive_gemm_kij<float>(A, B, C, std::move(config));
 
   std::vector<float> expected = {58, 139, 64, 154};
   for (size_t i = 0; i < 4; ++i) {
@@ -126,7 +142,7 @@ TEST(GemmTestAccuracy, SGEMMTiledRowMajor) {
 
   auto config = types::GemmConfig(types::Layout::ROW_MAJOR, M, N, K, K, N, N, 2);
 
-  tiled_gemm<float>(A, B, C, config);
+  tiled_gemm<float>(A, B, C, std::move(config));
 
   std::vector<float> expected = {58, 64, 139, 154};
   for (size_t i = 0; i < 4; ++i) {
@@ -143,7 +159,7 @@ TEST(GemmTestAccuracy, SGEMMTiledColMajor) {
 
   auto config = types::GemmConfig(types::Layout::COLUMN_MAJOR, M, N, K, M, K, M, 2);
 
-  tiled_gemm<float>(A, B, C, config);
+  tiled_gemm<float>(A, B, C, std::move(config));
 
   std::vector<float> expected = {30, 66, 102, 36, 81, 126, 42, 96, 150};
   for (size_t i = 0; i < 4; ++i) {
@@ -159,7 +175,7 @@ TEST(GemmTestAccuracy, SGEMMTiledColMajorAsymm) {
   float M = 2, N = 2, K = 3;
   auto config = types::GemmConfig(types::Layout::COLUMN_MAJOR, M, N, K, M, K, M, 2);
 
-  tiled_gemm<float>(A, B, C, config);
+  tiled_gemm<float>(A, B, C, std::move(config));
 
   std::vector<float> expected = {58, 139, 64, 154};
   for (size_t i = 0; i < 4; ++i) {
