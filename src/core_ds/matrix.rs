@@ -1,4 +1,5 @@
 use std::ptr;
+use std::ops::Index;
 
 /// Type constraints for Matrix.
 pub trait NumericType : Copy {}
@@ -37,8 +38,11 @@ impl<'data, T> Matrix<'data, T> where T: NumericType {
     fn data(&self) -> &[T] {
         self.data
     }
+}
 
-    fn at(&self, index: usize) -> &T {
+impl<T> Index<usize> for Matrix<'_, T> where T: NumericType {
+    type Output = T;
+    fn index(&self, index: usize) -> &Self::Output {
         let ptr = self.get_as_ptr();
         let t: *const T;
         
@@ -65,7 +69,7 @@ mod tests {
         let mat = Matrix::new(&mut data, 1, 2, 2);
         
         // PANIC!
-        let _t = *mat.at(500);
+        let _t = mat[500];
     }
     
     #[test]
@@ -73,7 +77,7 @@ mod tests {
         let mut data = vec![1, 2, 3, 4];
         let mat = Matrix::new(&mut data, 1, 2, 2);
         
-        assert_eq!(*mat.at(2), 3);
+        assert_eq!(mat[2], 3);
     }
     
     #[test]
@@ -86,6 +90,6 @@ mod tests {
             ptr::write(ptr.offset(1), -1);
         }
         
-        assert_eq!(*mat.at(1), -1);
+        assert_eq!(mat[1], -1);
     }
 }
