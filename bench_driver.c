@@ -4,17 +4,18 @@
 
 int main(void) {
 
-  devblas_gemm_config_t config = {
-      .M = 1024,
-      .N = 1024,
-      .K = 1024,
-      .lda = 1032,
-      .ldb = 1032,
-      .ldc = 1032,
-      .tileSize = 8,
-  };
+    devblas_gemm_config_t config = {
+        .layout = DEVBLAS_LAYOUT_ROW_MAJOR,
+        .M = 1024,
+        .N = 1024,
+        .K = 1024,
+        .lda = 1032,
+        .ldb = 1032,
+        .ldc = 1032,
+        .tileSize = 8,
+    };
 
-  bench_sgemm(tiled_sgemm, "tiled_sgemm_ijk_benchmark", 2, 5, &config);
+    bench_sgemm(tiled_sgemm, "tiled_sgemm_ijk_benchmark", 2, 5, &config);
 
-  return 0;
+    return 0;
 }

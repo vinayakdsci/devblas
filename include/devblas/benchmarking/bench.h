@@ -5,16 +5,15 @@
 #include "devblas/types/config.h"
 #include "devblas/types/layout.h"
 
-namespace devblas::internal::bench
-{
+namespace devblas::internal::bench {
 
 template <typename T>
-using GemmFn
-    = void (*) (const T *, const T *, T *, devblas_gemm_config_t *config);
+using GemmFn = void (*)(const T *, const T *, T *,
+                        devblas_gemm_config_t *config);
 
 template <typename T>
-void benchmark_gemm (const char *name, int warmup_iters, int iters,
-                     GemmFn<T> fn, devblas_gemm_config_t *config);
+void benchmark_gemm(const char *name, int warmup_iters, int iters, GemmFn<T> fn,
+                    devblas_gemm_config_t *config);
 } // namespace devblas::internal::bench
 
 #endif

@@ -3,28 +3,22 @@
 
 #include "devblas/c_api/blas.h"
 
-namespace devblas::internal
-{
-namespace types
-{
-enum class Layout
-{
+namespace devblas::internal {
+namespace types {
+enum class Layout {
     ROW_MAJOR,
     COLUMN_MAJOR,
 };
 
-inline Layout
-layout_to_cpp (devblas_layout_t layout)
-{
-    switch (layout)
-        {
-            case DEVBLAS_LAYOUT_ROW_MAJOR:
-                return Layout::ROW_MAJOR;
-            case DEVBLAS_LAYOUT_COLUMN_MAJOR:
-                return Layout::COLUMN_MAJOR;
-            default:
-                return Layout::ROW_MAJOR;
-        }
+inline Layout layout_to_cpp(devblas_layout_t layout) {
+    switch (layout) {
+    case DEVBLAS_LAYOUT_ROW_MAJOR:
+        return Layout::ROW_MAJOR;
+    case DEVBLAS_LAYOUT_COLUMN_MAJOR:
+        return Layout::COLUMN_MAJOR;
+    default:
+        return Layout::ROW_MAJOR;
+    }
 }
 } // namespace types
 } // namespace devblas::internal
