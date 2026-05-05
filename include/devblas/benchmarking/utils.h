@@ -21,6 +21,26 @@ struct Timer {
     std::chrono::time_point<std::chrono::steady_clock> start_;
 };
 
+struct ScopedTimer {
+    ScopedTimer(double &time_ref)
+        : start_(std::chrono::steady_clock::now()), time_ref_(time_ref) {}
+    double elapsed_ms() {
+        auto now = std::chrono::steady_clock::now();
+        return std::chrono::duration_cast<std::chrono::nanoseconds>(now -
+                                                                    start_)
+                   .count() *
+               1e-6;
+    }
+    double elapsed_s() { return elapsed_ms() * (double)1e-3; }
+    void reset() { start_ = std::chrono::steady_clock::now(); }
+
+    ~ScopedTimer() { time_ref_ = elapsed_s(); }
+
+  private:
+    std::chrono::time_point<std::chrono::steady_clock> start_;
+    double &time_ref_;
+};
+
 } // namespace bench
 } // namespace devblas::internal
 

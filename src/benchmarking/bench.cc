@@ -94,12 +94,16 @@ void benchmark_gemm(const char *name, int warmup_iters, int iters, GemmFn<T> fn,
     double flops_per_gemm = 2.0 * M * N * K;
     double total_flops = iters * flops_per_gemm;
 
-    Timer t = Timer();
-    for (int i = 0; i < iters; ++i) {
-        fn(A.data(), B.data(), C.data(), config);
+    double time_ref = 0.0;
+
+    {
+        auto timer = ScopedTimer(time_ref);
+        for (int i = 0; i < iters; ++i) {
+            fn(A.data(), B.data(), C.data(), config);
+        }
     }
 
-    double total_seconds = t.elapsed_s();
+    double total_seconds = time_ref;
     double gflops = (total_flops / total_seconds) * (double)1e-9;
 
     std::cout << name << ":\n";
