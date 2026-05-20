@@ -1,10 +1,6 @@
 #pragma once
 
-#ifdef __cplusplus
-    #include <cstdint>
-#else
-    #include <stdint.h>
-#endif
+#include <stdint.h>
 
 #define DEVBLAS_STR_MACRO(x) #x
 
