@@ -8,10 +8,17 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 add_subdirectory(src)
 
 option(DEVBLAS_BUILD_BENCH OFF)
+option(DEVBLAS_OPENMP_PARALLELIZE OFF)
 option(DEVBLAS_FAST_MATH "Build with -ffast-math to more aggressively optimize floating point operations. Might affect numerical stability and standards compliance" OFF)
 if(DEVBLAS_FAST_MATH)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ffast-math")
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -ffast-math")
+endif()
+
+if(DEVBLAS_OPENMP_PARALLELIZE)
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp")
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fopenmp")
+	add_compile_definitions(DEVBLAS_OPENMP_PARALLELIZE=ON)
 endif()
 
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} -O3")
@@ -21,6 +28,11 @@ if (DEVBLAS_BUILD_BENCH)
 	add_executable(bench_driver bench_driver.c)
 	# target_link_libraries(bench_driver devblas)
 	target_link_libraries(bench_driver devblas)
+	target_compile_options(
+		bench_driver
+		PRIVATE
+			$<$<CONFIG:Release>:-O3 -march=native -pedantic>
+	)
 endif()
 
 

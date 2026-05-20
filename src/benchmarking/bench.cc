@@ -1,6 +1,7 @@
 #include "devblas/benchmarking/bench.h"
 #include "devblas/benchmarking/utils.h"
 #include "devblas/c_api/blas.h"
+#include "devblas/macros.h"
 #include "devblas/types/layout.h"
 #include <iostream>
 #include <random>
@@ -52,16 +53,16 @@ void benchmark_gemm(const char *name, int warmup_iters, int iters, GemmFn<T> fn,
 
     // TODO (vinayakdsci): Refactor this into a reusable function.
     if (cppConfig.layoutIsRowMajor()) {
-        for (int64_t i = 0; i < M; ++i) {
-            for (size_t j = 0; j < lda; ++j) {
+        for (DEVBLAS_INT_T i = 0; i < M; ++i) {
+            for (DEVBLAS_INT_T j = 0; j < lda; ++j) {
                 if (j < K) {
                     A[i * lda + j] = static_cast<T>(dist(rng));
                 }
             }
         }
     } else {
-        for (size_t k = 0; k < K; ++k) {
-            for (int64_t i = 0; i < lda; ++i) {
+        for (DEVBLAS_INT_T k = 0; k < K; ++k) {
+            for (DEVBLAS_INT_T i = 0; i < lda; ++i) {
                 if (i < M) {
                     A[k * lda + i] = static_cast<T>(dist(rng));
                 }
@@ -70,16 +71,16 @@ void benchmark_gemm(const char *name, int warmup_iters, int iters, GemmFn<T> fn,
     }
 
     if (cppConfig.layoutIsRowMajor()) {
-        for (int64_t i = 0; i < K; ++i) {
-            for (size_t j = 0; j < ldb; ++j) {
+        for (DEVBLAS_INT_T i = 0; i < K; ++i) {
+            for (DEVBLAS_INT_T j = 0; j < ldb; ++j) {
                 if (j < N) {
                     B[i * ldb + j] = static_cast<T>(dist(rng));
                 }
             }
         }
     } else {
-        for (size_t j = 0; j < N; ++j) {
-            for (int64_t i = 0; i < ldb; ++i) {
+        for (DEVBLAS_INT_T j = 0; j < N; ++j) {
+            for (DEVBLAS_INT_T i = 0; i < ldb; ++i) {
                 if (i < K) {
                     B[j * ldb + i] = static_cast<T>(dist(rng));
                 }

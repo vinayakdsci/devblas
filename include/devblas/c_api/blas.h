@@ -1,6 +1,8 @@
 #ifndef DEVBLAS_C_API_H
 #define DEVBLAS_C_API_H
 
+#include "devblas/macros.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -12,13 +14,13 @@ typedef enum devblas_layout_t {
 
 typedef struct devblas_gemm_config_t {
     devblas_layout_t layout;
-    int M;
-    int N;
-    int K;
-    int lda;
-    int ldb;
-    int ldc;
-    int tileSize;
+    DEVBLAS_INT_T M;
+    DEVBLAS_INT_T N;
+    DEVBLAS_INT_T K;
+    DEVBLAS_INT_T lda;
+    DEVBLAS_INT_T ldb;
+    DEVBLAS_INT_T ldc;
+    DEVBLAS_INT_T tileSize;
 } devblas_gemm_config_t;
 
 void naive_igemm_ijk(const int *, const int *, int *,
