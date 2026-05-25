@@ -5,6 +5,7 @@ libdevblas_kernels = static_library(
 
 	[
 		'dispatch.c',
+        'avx2.c',
 	],
 
 	include_directories : inc,

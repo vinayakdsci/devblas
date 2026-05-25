@@ -33,16 +33,14 @@ AllowShortBlocksOnASingleLine: Never
 AllowShortEnumsOnASingleLine: false
 
 AlwaysBreakTemplateDeclarations: Yes
-BreakTemplateDeclarations: Yes
 
-AlignAfterOpenBracket: BlockIndent
 AlignOperands: false
 AlignConsecutiveAssignments: false
 AlignConsecutiveDeclarations: false
 AlignEscapedNewlines: Left
 
-BinPackArguments: false
-BinPackParameters: false
+BinPackArguments: true
+BinPackParameters: true
 
 PointerAlignment: Right
 ReferenceAlignment: Right
