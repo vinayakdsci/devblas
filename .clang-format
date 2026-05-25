@@ -1,0 +1,71 @@
+BasedOnStyle: GNU
+
+UseTab: Always
+IndentWidth: 4
+TabWidth: 4
+ContinuationIndentWidth: 8
+
+ColumnLimit: 72
+
+BreakBeforeBraces: GNU
+BraceWrapping:
+    AfterClass: true
+    AfterControlStatement: true
+    AfterEnum: true
+    AfterFunction: true
+    AfterNamespace: true
+    AfterStruct: true
+    AfterUnion: true
+    BeforeCatch: true
+    BeforeElse: true
+    IndentBraces: false
+    SplitEmptyFunction: true
+    SplitEmptyRecord: true
+    SplitEmptyNamespace: true
+
+IndentCaseLabels: true
+IndentCaseBlocks: true
+
+AllowShortFunctionsOnASingleLine: None
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
+AllowShortBlocksOnASingleLine: Never
+AllowShortEnumsOnASingleLine: false
+
+AlwaysBreakTemplateDeclarations: Yes
+BreakTemplateDeclarations: Yes
+
+AlignAfterOpenBracket: BlockIndent
+AlignOperands: false
+AlignConsecutiveAssignments: false
+AlignConsecutiveDeclarations: false
+AlignEscapedNewlines: Left
+
+BinPackArguments: false
+BinPackParameters: false
+
+PointerAlignment: Right
+ReferenceAlignment: Right
+
+SpaceBeforeParens: ControlStatements
+SpacesInParentheses: false
+SpacesInSquareBrackets: false
+SpacesInAngles: Never
+
+Cpp11BracedListStyle: false
+
+IndentPPDirectives: None
+
+NamespaceIndentation: All
+
+SortIncludes: false
+
+KeepEmptyLinesAtTheStartOfBlocks: false
+MaxEmptyLinesToKeep: 1
+
+BreakBeforeBinaryOperators: NonAssignment
+
+PenaltyBreakAssignment: 1
+PenaltyBreakBeforeFirstCallParameter: 1
+PenaltyExcessCharacter: 1000000
+PenaltyReturnTypeOnItsOwnLine: 1
